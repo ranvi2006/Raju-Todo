@@ -56,11 +56,15 @@ app.post("/todo", wrapAsync(async (req, res) => {
       message: "Invalid user",
     });
   }
+  if (!date) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid date",
+    });
+  }
 
-  const query = { user };
-  if (date) query.date = date;
 
-  const todos = await Todo.find(query);
+  const todos = await Todo.find({ user: user, date: date });
 
   res.status(200).json({
     success: true,
