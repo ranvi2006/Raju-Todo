@@ -67,6 +67,36 @@ app.post("/todo", wrapAsync(async (req, res) => {
     todos
   });
 }));
+// Mark a todo as done
+app.post("/done", wrapAsync(async (req, res) => {
+  const { todoId } = req.body;
+
+  if (!todoId) {
+    return res.status(400).json({
+      success: false,
+      message: "Missing todoId",
+    });
+  }
+
+  const updatedTodo = await Todo.findOneAndUpdate(
+    { _id: todoId },      // Match by _id
+    { completed: true },  // Set completed to true
+    { new: true }         // Return the updated document
+  );
+
+  if (!updatedTodo) {
+    return res.status(404).json({
+      success: false,
+      message: "Todo not found",
+    });
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "Todo marked as completed",
+    todo: updatedTodo,
+  });
+}));
 
 // Universal Error Handler
 app.use((err, req, res, next) => {
