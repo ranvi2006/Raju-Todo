@@ -57,12 +57,12 @@ function App() {
   };
 
   const handleDelete = async (todoId) => {
-    try {
-      const res = await axios.post("https://raju-todo.onrender.com/delete", { todoId });
-      if (res.data.success) fetchTodos(date);
-    } catch (error) {
-      console.error("Error deleting todo:", error);
-    }
+    // try {
+    //   const res = await axios.post("https://raju-todo.onrender.com/delete", { todoId });
+    //   if (res.data.success) fetchTodos(date);
+    // } catch (error) {
+    //   console.error("Error deleting todo:", error);
+    // }
   };
 
   const getPerformance = (todos) => {
