@@ -12,7 +12,6 @@ function App() {
   const [newTodo1, setNewTodo1] = useState("");
   const [newTodo2, setNewTodo2] = useState("");
 
-  // Fetch todos function
   const fetchTodos = async (selectedDate) => {
     try {
       const res1 = await axios.post("https://raju-todo.onrender.com/todo", { user: user1, date: selectedDate });
@@ -40,11 +39,7 @@ function App() {
   const handleAddTodo = async (user, todo, setTodos, setNewTodo) => {
     if (!todo.trim()) return;
     try {
-      await axios.post("https://raju-todo.onrender.com/add", { 
-        user,
-        data: todo,
-        date
-      });
+      await axios.post("https://raju-todo.onrender.com/add", { user, data: todo, date });
       setNewTodo("");
       fetchTodos(date);
     } catch (error) {
@@ -55,28 +50,23 @@ function App() {
   const handleMarkDone = async (todoId) => {
     try {
       const res = await axios.post("https://raju-todo.onrender.com/done", { todoId });
-      if (res.data.success) {
-        fetchTodos(date); // refresh todos after marking done
-      }
+      if (res.data.success) fetchTodos(date);
     } catch (error) {
       console.error("Error marking todo as done:", error);
     }
   };
 
   const handleDelete = async (todoId) => {
-    // try {
-    //   const res = await axios.post("https://raju-todo.onrender.com/delete", { todoId });
-    //   if (res.data.success) {
-    //     fetchTodos(date);
-    //   }
-    // } catch (error) {
-    //   console.error("Error deleting todo:", error);
-    // }
+    try {
+      const res = await axios.post("https://raju-todo.onrender.com/delete", { todoId });
+      if (res.data.success) fetchTodos(date);
+    } catch (error) {
+      console.error("Error deleting todo:", error);
+    }
   };
 
-  // Calculate performance
   const getPerformance = (todos) => {
-    if (todos.length === 0) return 0;
+    if (!todos.length) return 0;
     const doneCount = todos.filter(todo => todo.completed).length;
     return Math.round((doneCount / todos.length) * 100);
   };
@@ -130,21 +120,30 @@ function App() {
               </div>
             )}
 
-            {todos1.map((todo, index) => (
-              <div key={index} className="card mb-2 shadow-sm">
-                <div className="card-body d-flex justify-content-between align-items-center">
-                  <span style={{ textDecoration: todo.completed ? "line-through" : "none" }}>
-                    {todo.data}
-                  </span>
-                  {isTodayOrFuture && (
-                    <div>
-                      <button onClick={() => handleMarkDone(todo._id)} className="btn btn-success btn-sm me-2">Done</button>
-                      <button onClick={() => handleDelete(todo._id)} className="btn btn-danger btn-sm">Delete</button>
-                    </div>
-                  )}
+            <div style={{ maxHeight: "400px", overflowY: "auto" }}>
+              {todos1.map((todo, index) => (
+                <div key={index} className="card mb-2 shadow-sm">
+                  <div className="card-body d-flex justify-content-between align-items-center flex-wrap">
+                    <span style={{ textDecoration: todo.completed ? "line-through" : "none", wordBreak: "break-word", maxWidth: "70%" }}>
+                      {todo.data}
+                    </span>
+                    {isTodayOrFuture && (
+                      <div className="mt-2 mt-md-0">
+                        <button
+                          onClick={() => handleMarkDone(todo._id)}
+                          className="btn btn-success btn-sm me-2"
+                          disabled={todo.completed}
+                          style={{ opacity: todo.completed ? 0.5 : 1 }}
+                        >
+                          Done
+                        </button>
+                        <button onClick={() => handleDelete(todo._id)} className="btn btn-danger btn-sm">Delete</button>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
 
           {/* User 2 Todos */}
@@ -172,21 +171,30 @@ function App() {
               </div>
             )}
 
-            {todos2.map((todo, index) => (
-              <div key={index} className="card mb-2 shadow-sm">
-                <div className="card-body d-flex justify-content-between align-items-center">
-                  <span style={{ textDecoration: todo.completed ? "line-through" : "none" }}>
-                    {todo.data}
-                  </span>
-                  {isTodayOrFuture && (
-                    <div>
-                      <button onClick={() => handleMarkDone(todo._id)} className="btn btn-success btn-sm me-2">Done</button>
-                      <button onClick={() => handleDelete(todo._id)} className="btn btn-danger btn-sm">Delete</button>
-                    </div>
-                  )}
+            <div style={{ maxHeight: "400px", overflowY: "auto" }}>
+              {todos2.map((todo, index) => (
+                <div key={index} className="card mb-2 shadow-sm">
+                  <div className="card-body d-flex justify-content-between align-items-center flex-wrap">
+                    <span style={{ textDecoration: todo.completed ? "line-through" : "none", wordBreak: "break-word", maxWidth: "70%" }}>
+                      {todo.data}
+                    </span>
+                    {isTodayOrFuture && (
+                      <div className="mt-2 mt-md-0">
+                        <button
+                          onClick={() => handleMarkDone(todo._id)}
+                          className="btn btn-success btn-sm me-2"
+                          disabled={todo.completed}
+                          style={{ opacity: todo.completed ? 0.5 : 1 }}
+                        >
+                          Done
+                        </button>
+                        <button onClick={() => handleDelete(todo._id)} className="btn btn-danger btn-sm">Delete</button>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
 
         </div>
