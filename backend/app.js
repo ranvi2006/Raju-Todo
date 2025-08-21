@@ -19,6 +19,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
+
+
 // Add a new todo
 app.post("/add", wrapAsync(async (req, res) => {
   const { user, date, data } = req.body;
@@ -48,23 +50,7 @@ app.post("/add", wrapAsync(async (req, res) => {
 
 // Get todos for a user (use query params)
 app.post("/todo", wrapAsync(async (req, res) => {
-  const { user, date } = req.body;
-
-  if (!user) {
-    return res.status(400).json({
-      success: false,
-      message: "Invalid user",
-    });
-  }
-  if (!date) {
-    return res.status(400).json({
-      success: false,
-      message: "Invalid date",
-    });
-  }
-
-
-  const todos = await Todo.find({ user: user, date: date });
+  const todos = await Todo.find({});
 
   res.status(200).json({
     success: true,
@@ -101,6 +87,23 @@ app.post("/done", wrapAsync(async (req, res) => {
     todo: updatedTodo,
   });
 }));
+
+
+app.post("/delete", wrapAsync(async (req, res) => {
+  const { todoId } = req.body;
+
+  if (!todoId) {
+    return res.status(400).json({
+      success: false,
+      message: "Missing todoId",
+    });
+  }
+
+  await Todo.deleteOne({_id:todoId});
+}))
+
+
+
 
 // Universal Error Handler
 app.use((err, req, res, next) => {
